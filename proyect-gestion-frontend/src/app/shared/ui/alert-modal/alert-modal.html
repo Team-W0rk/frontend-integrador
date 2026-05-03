@@ -1,0 +1,22 @@
+@if (alertService.visible()) {
+  <div class="modal-overlay" (click)="alertService.close()">
+    <div class="modal-box" [class]="'modal-box--' + alertService.config().type" (click)="$event.stopPropagation()">
+
+      <div class="modal-icon">
+        {{ icons[alertService.config().type] }}
+      </div>
+
+      <h2 class="modal-title">{{ alertService.config().title }}</h2>
+      <p class="modal-message">{{ alertService.config().message }}</p>
+
+      <button
+        class="modal-btn"
+        [class]="'modal-btn--' + alertService.config().type"
+        (click)="alertService.close()"
+      >
+        {{ alertService.config().buttonText }}
+      </button>
+
+    </div>
+  </div>
+}

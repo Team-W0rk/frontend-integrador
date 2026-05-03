@@ -1,0 +1,87 @@
+<section class="login-page">
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <div class="login-header">
+        <div class="logo-login">
+          <div class="flex items-center justify-center gap-2">
+            <div style="width:40px;height:40px;background:#3b82f6;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+              <span style="color:white;font-size:1.25rem;font-weight:700;">G</span>
+            </div>
+            <span class="text-2xl font-bold text-gray-800">GestiónPro</span>
+          </div>
+        </div>
+        <h1>Sistema de Gestión de Proyectos</h1>
+        <p>Ingresá tus credenciales para continuar</p>
+      </div>
+
+      <form (ngSubmit)="submit()" class="login-form" novalidate>
+
+        <div class="form-group" [class.has-error]="usernameError()">
+          <label for="username">Usuario</label>
+          <input
+            id="username"
+            type="text"
+            placeholder="admin"
+            [value]="username()"
+            (input)="username.set($any($event.target).value)"
+            (blur)="usernameTouched.set(true)"
+            autocomplete="username"
+          />
+          @if (usernameError()) {
+            <span class="field-error">⚠️ {{ usernameError() }}</span>
+          }
+        </div>
+
+        <div class="form-group" [class.has-error]="passwordError()">
+          <label for="password">Contraseña</label>
+          <div class="password-input">
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              placeholder="••••••••"
+              [value]="password()"
+              (input)="password.set($any($event.target).value)"
+              (blur)="passwordTouched.set(true)"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password" (click)="togglePassword()">
+              @if (showPassword()) { 👁️ } @else { 👁️‍🗨️ }
+            </button>
+          </div>
+          @if (passwordError()) {
+            <span class="field-error">⚠️ {{ passwordError() }}</span>
+          }
+        </div>
+
+        @if (serverError()) {
+          <div class="error-message">⚠️ {{ serverError() }}</div>
+        }
+
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span>
+            Ingresando...
+          } @else {
+            Ingresar
+          }
+        </button>
+
+      </form>
+
+      <div class="login-footer">
+        <p>Trabajo Final Integrador — UNER 2026</p>
+      </div>
+
+    </div>
+  </div>
+
+  <app-alert-modal />
+
+</section>
+
+<div class="deco-curve"></div>
+<div class="deco-dot deco-dot--1"></div>
+<div class="deco-dot deco-dot--2"></div>
+<div class="deco-dot deco-dot--3"></div>
