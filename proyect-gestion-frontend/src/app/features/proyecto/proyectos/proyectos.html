@@ -1,0 +1,30 @@
+<div class="dashboard-padding mx-auto">
+  <app-page-header
+    title="Proyectos"
+    subtitle="Gestión completa de proyectos"
+    [showSearch]="true"
+    searchPlaceholder="Buscar proyecto..."
+    [createRoute]="'/proyectos/nuevo'"
+    createLabel="Nuevo proyecto"
+    [exportExcel]="true"
+    [exportPdf]="true"
+    (search)="search.set($event)"
+    (exportExcelClick)="exportarExcel()"
+    (exportPdfClick)="exportarPdf()"
+  />
+    <app-data-table
+      [columns]="columns"
+      [data]="proyectosFiltrados()"
+      [loading]="loading()"
+      (detail)="verDetalle($event.id)"
+      (edit)="editar($event.id)"
+      (remove)="eliminar($event)"
+    />
+</div>
+<p-confirmDialog
+  [draggable]="false"
+  [closable]="false"
+  position="center"
+/>
+
+<p-toast position="top-right" />

@@ -1,0 +1,118 @@
+<div class="padding mx-auto">
+  @if (loading()) {
+    <div class="text-center py-20 text-gray-400">
+      Cargando proyecto...
+    </div>
+  }
+  @else if (proyecto()) {
+    <app-page-header
+      [title]="proyecto()!.nombre"
+      subtitle="Detalle completo del proyecto"
+      [backRoute]="'/proyectos'"
+      backLabel="Volver a proyectos"
+    />
+    <div class="bg-white rounded-3xl border border-gray-100 p-6 mb-6 shadow-sm">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 flex-wrap">
+            <app-badge [label]="proyecto()!.estado" [color]="badgeColor()" size="md" />
+            @if (proyecto()!.retrasado) {
+              <app-badge label="Retrasado" color="red" size="md" />
+            }
+          </div>
+          <div>
+            <p class="text-sm text-gray-400 mb-1">
+              Cliente
+            </p>
+            <h2 class="text-xl font-semibold text-gray-800">
+              {{
+                proyecto()!.cliente?.nombre || 'Proyecto interno'
+              }}
+            </h2>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 min-w-[280px]">
+            <div class="rounded-2xl bg-blue-50 p-4" >
+                <p class="text-sm text-blue-500">
+                    Tareas
+                </p>
+                <h3 class="text-3xl font-bold text-blue-700">
+                    {{
+                        proyecto()!.tareas?.length || 0
+                    }}
+                </h3>
+            </div>
+            <div class="rounded-2xl bg-purple-50 p-4">
+                <p class="text-sm text-purple-500">
+                Metas
+                </p>
+                <h3 class="text-3xl font-bold text-purple-700">
+                    {{
+                        proyecto()!.metas?.length || 0
+                    }}
+                </h3>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+            <app-section-card title="Información">
+                <div class="space-y-5">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">
+                            Fecha fin
+                        </p>
+                        <p class="font-medium text-gray-700">
+                            {{
+                            proyecto()!.fechaFin
+                                ? (
+                                    proyecto()!.fechaFin | date:'dd/MM/yyyy'
+                                )
+                                : 'Sin fecha'
+                            }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">
+                            Días restantes
+                        </p>
+                        <p class="font-medium text-gray-700">
+                            {{
+                            proyecto()!.diasRestantes  ?? '-'
+                            }}
+                        </p>
+                    </div>
+                </div>
+            </app-section-card>
+        </div>
+
+        <div class="lg:col-span-2">
+            <app-section-card title="Tareas del proyecto">
+                @if ( proyecto()!.tareas?.length === 0) {
+                    <div class="text-center py-10 text-gray-400">
+                    No hay tareas
+                    </div>
+                }
+                @else {
+                    <div class="space-y-3">
+                    @for ( tarea of proyecto()!.tareas; track tarea.id) {
+                        <div class=" border border-gray-100 rounded-2xl p-4 hover:bg-gray-50 transition-all">
+                            <div class=" flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">
+                                        {{ tarea.descripcion }}
+                                    </h4>
+                                </div>
+                                <app-badge [label]="tarea.estado" color="blue" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            </app-section-card>
+        </div>
+    </div>
+  }
+</div>

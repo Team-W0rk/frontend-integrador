@@ -1,0 +1,68 @@
+<div class="padding mx-auto">
+  <app-page-header
+    [title]="
+      editando()
+        ? 'Editar cliente'
+        : 'Nuevo cliente'
+    "
+    subtitle="Gestión completa de clientes"
+    [backRoute]="'/clientes'"
+    backLabel="Volver"
+  />
+  <div
+    class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+    <form
+      [formGroup]="form"
+      (ngSubmit)="guardar()"
+      class="flex flex-col gap-6"
+    >
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-2">
+          Nombre
+        </label>
+        <input
+          type="text"
+          formControlName="nombre"
+          placeholder="Ingrese el nombre del cliente"
+          class="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        @if (
+          form.controls.nombre.invalid &&
+          form.controls.nombre.touched
+        ) {
+
+          <p class="text-sm text-red-500 mt-2">
+            Ingrese un nombre válido
+          </p>
+        }
+      </div>
+      <div
+        class="flex items-center gap-3 pt-2">
+        <button
+          type="submit"
+          [disabled]="saving()"
+          class="px-5 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer disabled:opacity-50"
+        >
+          {{
+            saving()
+              ? 'Guardando...'
+              : (
+                  editando()
+                    ? 'Actualizar cliente'
+                    : 'Crear cliente'
+                )
+          }}
+        </button>
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="px-5 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all cursor-pointer"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast />

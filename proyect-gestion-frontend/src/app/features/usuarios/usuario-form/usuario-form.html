@@ -1,0 +1,82 @@
+<div class="padding mx-auto">
+  <app-page-header
+    [title]="
+      editando()
+        ? 'Editar usuario'
+        : 'Nuevo usuario'
+    "
+    subtitle="Gestión de usuarios"
+    [backRoute]="'/usuarios'"
+    backLabel="Volver"
+  />
+  <div class="bg-white rounded-2xl p-6 border border-gray-100">
+    <form
+      [formGroup]="form"
+      (ngSubmit)="guardar()"
+      class="flex flex-col gap-5"
+    >
+      <div>
+        <label class="block mb-2 text-sm font-medium">
+          Usuario
+        </label>
+        <input
+          type="text"
+          formControlName="username"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none"
+        />
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium">
+          Contraseña
+        </label>
+        <input
+          type="password"
+          formControlName="password"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none"
+        />
+        @if (editando()) {
+          <small class="text-gray-400">
+            Dejar vacío para no modificar
+          </small>
+        }
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium">
+          Rol
+        </label>
+        <select
+          formControlName="rol"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none"
+        >
+          <option value="usuario">
+            Usuario
+          </option>
+          <option value="admin">
+            Administrador
+          </option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-3 pt-4">
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="px-5 py-3 rounded-xl border border-gray-200"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="saving()"
+          class="px-5 py-3 rounded-xl bg-blue-600 text-white"
+        >
+          {{
+            saving()
+              ? 'Guardando...'
+              : 'Guardar'
+          }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast />

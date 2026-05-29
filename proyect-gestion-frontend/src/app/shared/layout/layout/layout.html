@@ -1,0 +1,34 @@
+<div class="flex min-h-screen bg-slate-50 relative">
+  @if (mobileSidebarOpen()) {
+    <div
+      class="fixed inset-0 bg-black/45 z-[199] md:hidden"
+      (click)="closeMobileSidebar()"
+    ></div>
+  }
+  <div
+    class="hidden md:flex shrink-0 transition-all duration-250"
+    [class.w-60]="!sidebarCollapsed()"
+    [class.w-16]="sidebarCollapsed()"
+  >
+    <app-sidebar
+      [collapsed]="sidebarCollapsed()"
+      (closeSidebar)="closeMobileSidebar()"
+    />
+  </div>
+  <div
+    class="fixed top-0 left-0 h-screen z-[200] md:hidden transition-transform duration-250"
+    [class.-translate-x-full]="!mobileSidebarOpen()"
+    [class.translate-x-0]="mobileSidebarOpen()"
+  >
+    <app-sidebar [collapsed]="false" (closeSidebar)="closeMobileSidebar()" />
+  </div>
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <app-navbar
+      [sidebarCollapsed]="sidebarCollapsed()"
+      (toggleSidebar)="toggleSidebar()"
+    />
+    <main class="flex-1 overflow-y-auto">
+      <router-outlet />
+    </main>
+  </div>
+</div>

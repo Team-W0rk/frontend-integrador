@@ -1,0 +1,21 @@
+<div class="padding mx-auto">
+  <app-page-header
+    title="Usuarios"
+    subtitle="Gestión de usuarios"
+    [showSearch]="true"
+    searchPlaceholder="Buscar usuario..."
+    [createRoute]="'/usuarios/nuevo'"
+    createLabel="Nuevo usuario"
+    (search)="search.set($event)"
+  />
+  <app-data-table
+    [columns]="columns"
+    [data]="usuariosFiltrados()"
+    [loading]="loading()"
+    (detail)="verDetalle($event.id)"
+    (edit)="editar($event.id)"
+    (remove)="eliminar($event)"
+  />
+</div>
+<p-toast />
+<p-confirmDialog />

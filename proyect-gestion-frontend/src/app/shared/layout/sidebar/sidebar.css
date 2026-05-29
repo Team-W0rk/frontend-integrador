@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  height: 100%;
+}
+
+.padding-aside{
+  padding: 15px !important;
+}
+
+.padding-nav{
+  padding: 10px 5px !important;
+}
+
+.padding-nav-item{
+  padding: 5px !important;
+}

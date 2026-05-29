@@ -1,0 +1,84 @@
+<div class="padding mx-auto">
+    <app-page-header
+        title="Detalle del usuario"
+        subtitle="Información completa del usuario"
+        [backRoute]="'/usuarios'"
+        backLabel="Volver a usuarios"
+    />
+    @if (loading()) {
+        <div class="text-center py-10 text-gray-400">
+        Cargando usuario...
+        </div>
+    } @else if (usuario()) {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <app-section-card title="Información general">
+                <div class="flex flex-col gap-5">
+                    <div>
+                        <p class="text-sm text-gray-500">
+                            Usuario
+                        </p>
+                        <p class="text-lg font-semibold text-gray-800">
+                            {{ usuario()!.username }}
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div>
+                        <p class="text-sm text-gray-500 mb-2">
+                            Estado
+                        </p>
+                        <app-badge
+                            [label]="usuario()!.estado"
+                            [color]="
+                            getEstadoColor(
+                                usuario()!.estado
+                            )
+                            "
+                        />
+                        </div>
+                        <div>
+                        <p class="text-sm text-gray-500 mb-2">
+                            Rol
+                        </p>
+
+                        <app-badge
+                            [label]="usuario()!.rol"
+                            [color]="
+                            getRolColor(
+                                usuario()!.rol
+                            )
+                            "
+                        />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">
+                            Creado
+                        </p>
+                        <p class="text-gray-700">
+                            {{
+                                usuario()!.creadoEn | date:'dd/MM/yyyy HH:mm'
+                            }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">
+                            Última actualización
+                        </p>
+                        <p class="text-gray-700">
+                        {{
+                            usuario()!.actualizadoEn | date:'dd/MM/yyyy HH:mm'
+                        }}
+                        </p>
+                    </div>
+                </div>
+            </app-section-card>
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button (click)="editar()"
+                class="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer"
+            >
+                Editar usuario
+            </button>
+        </div>
+    }
+</div>

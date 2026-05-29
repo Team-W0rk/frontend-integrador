@@ -1,4 +1,314 @@
-<div style="padding: 2rem">
-      <h1>Dashboard</h1>
-      <p>Bienvenido al sistema</p>
+<div class="dashboard-padding mx-auto">
+
+  <!-- Header -->
+  <app-page-header
+    title="Dashboard"
+    [subtitle]="'Bienvenido, ' + username()"
+  />
+
+  <!-- Loading -->
+  @if (loading()) {
+
+    <app-spinner-component
+      label="Cargando métricas..."
+    />
+
+  }
+
+  <!-- Error -->
+  @else if (error()) {
+
+    <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+
+      <span>
+        ⚠️ {{ error() }}
+      </span>
+
+      <button
+        (click)="cargarDatos()"
+        class="px-3 py-1 bg-red-600 text-white rounded-lg text-sm cursor-pointer hover:bg-red-700"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  }
+
+  <!-- Content -->
+  @else if (resumen()) {
+
+    <!-- Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+      <!-- Proyectos -->
+      <app-metric-card
+        title="Proyectos totales"
+        icon="📁"
+        color="blue"
+        [value]="resumen()!.proyectos.total"
+        [badges]="[
+          {
+            label: resumen()!.proyectos.activos + ' activos',
+            color: 'green'
+          },
+          {
+            label: resumen()!.proyectos.finalizados + ' finalizados',
+            color: 'gray'
+          }
+        ]"
+      />
+
+      <!-- Tareas -->
+      <app-metric-card
+        title="Tareas totales"
+        icon="✅"
+        color="green"
+        [value]="resumen()!.tareas.total"
+        [badges]="[
+          {
+            label: resumen()!.tareas.pendientes + ' pendientes',
+            color: 'yellow'
+          },
+          {
+            label: resumen()!.tareas.finalizadas + ' finalizadas',
+            color: 'green'
+          }
+        ]"
+      />
+
+      <!-- Clientes -->
+      <app-metric-card
+        title="Clientes"
+        icon="🏢"
+        color="purple"
+        [value]="resumen()!.clientes.total"
+        [badges]="[
+          {
+            label: resumen()!.clientes.activos + ' activos',
+            color: 'green'
+          },
+          {
+            label: resumen()!.clientes.baja + ' baja',
+            color: 'red'
+          }
+        ]"
+      />
+
+      <!-- Retrasados -->
+      <app-metric-card
+        title="Proyectos retrasados"
+        icon="⏰"
+        [color]="
+          resumen()!.proyectos.retrasados > 0
+            ? 'red'
+            : 'gray'
+        "
+        [value]="resumen()!.proyectos.retrasados"
+        [badges]="
+          resumen()!.proyectos.retrasados === 0
+            ? [
+                {
+                  label: '¡Todo en tiempo!',
+                  color: 'green'
+                }
+              ]
+            : []
+        "
+        [link]="
+          resumen()!.proyectos.retrasados > 0
+            ? '/proyectos'
+            : null
+        "
+        linkLabel="Ver proyectos →"
+      />
+
+    </div>
+
+    <!-- Progress -->
+    <app-progress-card
+      class="block mb-6"
+      title="Progreso general de tareas"
+      [value]="getPorcentajeTareas()"
+      [leftLabel]="
+        resumen()!.tareas.finalizadas + ' finalizadas'
+      "
+      [rightLabel]="
+        resumen()!.tareas.pendientes + ' pendientes'
+      "
+      color="green"
+    />
+
+<!-- Tables -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+
+  <!-- Clientes -->
+  <app-section-card
+    title="Proyectos por cliente"
+    icon="📊"
+    link="/clientes"
+    linkLabel="Ver clientes →"
+  >
+
+    @if (porCliente().length === 0) {
+
+      <app-empty-state
+        icon="📭"
+        title="No hay datos"
+        description="Todavía no hay estadísticas disponibles"
+      />
+
+    } @else {
+
+      <div class="overflow-x-auto">
+
+        <table class="w-full text-sm">
+
+          <thead>
+
+            <tr class="border-b border-gray-100">
+
+              <th class="text-left py-2 px-3 text-xs text-gray-400 font-semibold uppercase">
+                Cliente
+              </th>
+
+              <th class="text-left py-2 px-3 text-xs text-gray-400 font-semibold uppercase">
+                Total
+              </th>
+
+              <th class="text-left py-2 px-3 text-xs text-gray-400 font-semibold uppercase">
+                Activos
+              </th>
+
+              <th class="text-left py-2 px-3 text-xs text-gray-400 font-semibold uppercase">
+                Finalizados
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (item of porCliente(); track item.cliente) {
+
+              <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+
+                <td class="py-2.5 px-3 text-gray-700">
+                  {{ item.cliente }}
+                </td>
+
+                <td class="py-2.5 px-3 font-bold text-gray-800">
+                  {{ item.total }}
+                </td>
+
+                <td class="py-2.5 px-3">
+
+                  <app-badge
+                    [label]="item.activos.toString()"
+                    color="green"
+                  />
+
+                </td>
+
+                <td class="py-2.5 px-3">
+
+                  <app-badge
+                    [label]="item.finalizados.toString()"
+                    color="gray"
+                  />
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </app-section-card>
+
+  <!-- Retrasados -->
+  <app-section-card
+    title="Proyectos retrasados"
+    icon="🚨"
+    link="/proyectos"
+    linkLabel="Ver todos →"
+  >
+
+    @if (retrasados().length === 0) {
+
+      <app-empty-state
+        icon="✅"
+        title="Sin retrasos"
+        description="¡Ningún proyecto retrasado!"
+      />
+
+    } @else {
+
+      <div class="flex flex-col gap-2">
+
+        @for (p of retrasados(); track p.id) {
+
+          <app-delayed-project-item
+            [project]="p"
+          />
+
+        }
+
+      </div>
+
+    }
+
+  </app-section-card>
+
+</div>
+
+<!-- Quick Actions -->
+<app-section-card
+  title="Accesos rápidos"
+>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+    <app-quick-action-card
+      icon="📁"
+      label="Proyectos"
+      route="/proyectos"
+    />
+
+    <app-quick-action-card
+      icon="🏢"
+      label="Clientes"
+      route="/clientes"
+    />
+
+    <app-quick-action-card
+      icon="📋"
+      label="Historial"
+      route="/historial"
+    />
+
+    @if (isAdmin()) {
+
+      <app-quick-action-card
+        icon="👥"
+        label="Usuarios"
+        route="/usuarios"
+      />
+
+    }
+
+  </div>
+
+</app-section-card>
+
+  }
+
 </div>
