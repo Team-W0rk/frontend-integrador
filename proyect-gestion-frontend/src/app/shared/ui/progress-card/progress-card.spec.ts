@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProgressCard } from './progress-card';
 
 describe('ProgressCard', () => {
@@ -9,8 +8,7 @@ describe('ProgressCard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProgressCard]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProgressCard);
     component = fixture.componentInstance;

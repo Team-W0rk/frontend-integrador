@@ -8,7 +8,7 @@
         </div>
     }
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <!-- Título -->
+        <!-- ttulo -->
         <div>
             <h1 class="text-2xl font-bold text-gray-800">
                 {{ title() }}
@@ -18,45 +18,44 @@
                 {{ subtitle() }}
                 </p>
             }
-            </div>
-            <!-- Acciones -->
-            <div class="flex items-center gap-2 flex-wrap">
+        </div>
+        <!-- acciones -->
+        <div class="flex items-center gap-2 flex-wrap">
             @if (exportPdf()) {
                 <button
-                class="flex items-center px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm hover:bg-blue-50 cursor-pointer"
-                (click)="exportPdfClick.emit()"
+                  class="flex items-center px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 hover:bg-blue-50 cursor-pointer"
+                  (click)="exportPdfClick.emit()"
                 >
-                <img src="/icons/icon-pdf.svg" alt="Exportar Excel" class="w-8 h-8 mr-2"> Exportar PDF
+                  <img src="/icons/icon-pdf.svg" alt="Exportar PDF" class="w-8 h-8 mr-2"> Exportar PDF
                 </button>
             }
             @if (exportExcel()) {
                 <button
-                class="flex items-center px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm hover:bg-blue-50 cursor-pointer"
-                (click)="exportExcelClick.emit()"
+                  class="flex items-center px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 hover:bg-blue-50 cursor-pointer"
+                  (click)="exportExcelClick.emit()"
                 >
-                <img src="/icons/icon-excel.svg" alt="Exportar Excel" class="w-8 h-8 mr-2">
-                Exportar Excel
+                  <img src="/icons/icon-excel.svg" alt="Exportar Excel" class="w-8 h-8 mr-2"> Exportar Excel
                 </button>
             }
             @if (createRoute()) {
                 <a
-                [routerLink]="createRoute()!"
-                class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm cursor-pointer hover:bg-blue-700 transition-all no-underline"
+                  [routerLink]="createRoute()!"
+                  class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm cursor-pointer hover:bg-blue-700 transition-all no-underline"
                 >
-                + {{ createLabel() }}
+                  + {{ createLabel() }}
                 </a>
             }
         </div>
     </div>
-    <!-- Buscador -->
+    <!-- buscador -->
     @if (showSearch()) {
         <div class="flex items-center">
             <input
-            #searchInput
-            type="text"
-            [placeholder]="searchPlaceholder()"
-            (input)="search.emit(searchInput.value)"
-            class="w-full md:w-80 px-4 py-2 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              #searchInput
+              type="text"
+              [placeholder]="searchPlaceholder()"
+              (input)="search.emit(searchInput.value)"
+              class="w-full md:w-80 px-4 py-2 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
             />
         </div>
     }

@@ -9,7 +9,6 @@ import { Component, computed, input } from '@angular/core';
 })
 export class ProgressCard {
   title = input.required<string>();
-
   value = input.required<number>();
 
   leftLabel = input<string>('');

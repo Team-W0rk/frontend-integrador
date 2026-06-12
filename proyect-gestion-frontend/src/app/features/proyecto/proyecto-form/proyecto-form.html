@@ -13,7 +13,6 @@
       <div class="py-16 text-center text-gray-400">
         Cargando...
       </div>
-
     } @else {
       <form
         [formGroup]="form"
@@ -28,7 +27,7 @@
             type="text"
             formControlName="nombre"
             placeholder="Ej: Sistema de inventario"
-            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
           />
 
           @if (
@@ -47,7 +46,7 @@
           </label>
           <select
             formControlName="clienteId"
-            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
           >
             <option [ngValue]="null">
               Proyecto interno
@@ -68,7 +67,7 @@
           <input
             type="date"
             formControlName="fechaFin"
-            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
           />
         </div>
 
@@ -93,7 +92,6 @@
                   ? 'Guardar cambios'
                   : 'Crear proyecto'
               }}
-
             }
           </button>
         </div>

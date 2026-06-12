@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MetricCard } from './metric-card';
 
 describe('MetricCard', () => {
@@ -9,8 +8,7 @@ describe('MetricCard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MetricCard]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MetricCard);
     component = fixture.componentInstance;
