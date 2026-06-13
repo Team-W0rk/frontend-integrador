@@ -1,7 +1,9 @@
+import { EstadoTarea } from "./enums.model";
+
 export interface Tarea {
   id: number;
   descripcion: string;
-  estado: string;
+  estado: EstadoTarea;
   proyectoId: number;
   metaId?: number | null;
   creadoEn?: string;

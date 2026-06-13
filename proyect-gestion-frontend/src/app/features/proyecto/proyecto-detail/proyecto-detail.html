@@ -12,107 +12,97 @@
       backLabel="Volver a proyectos"
     />
     <div class="bg-white rounded-3xl border border-gray-100 p-6 mb-6 shadow-sm">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-3 flex-wrap">
-            <app-badge [label]="proyecto()!.estado" [color]="badgeColor()" size="md" />
-            @if (proyecto()!.retrasado) {
-              <app-badge label="Retrasado" color="red" size="md" />
-            }
-          </div>
-          <div>
-            <p class="text-sm text-gray-400 mb-1">
-              Cliente
-            </p>
-            <h2 class="text-xl font-semibold text-gray-800">
-              {{
-                proyecto()!.cliente?.nombre || 'Proyecto interno'
-              }}
-            </h2>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 min-w-[280px]">
-            <div class="rounded-2xl bg-blue-50 p-4" >
-                <p class="text-sm text-blue-500">
-                    Tareas
-                </p>
-                <h3 class="text-3xl font-bold text-blue-700">
-                    {{
-                        proyecto()!.tareas?.length || 0
-                    }}
-                </h3>
-            </div>
-            <div class="rounded-2xl bg-purple-50 p-4">
-                <p class="text-sm text-purple-500">
-                Metas
-                </p>
-                <h3 class="text-3xl font-bold text-purple-700">
-                    {{
-                        proyecto()!.metas?.length || 0
-                    }}
-                </h3>
-            </div>
-        </div>
-      </div>
+      <app-badge
+        [label]="proyecto()!.estado"
+        [color]="badgeColor()"
+        size="md"
+      />
+      <p class="text-sm text-gray-400 mt-2">Cliente</p>
+      <h2 class="text-xl font-semibold">
+        {{ proyecto()!.cliente?.nombre || 'Proyecto interno' }}
+      </h2>
     </div>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-1">
-            <app-section-card title="Información">
-                <div class="space-y-5">
-                    <div>
-                        <p class="text-sm text-gray-400 mb-1">
-                            Fecha fin
-                        </p>
-                        <p class="font-medium text-gray-700">
-                            {{
-                            proyecto()!.fechaFin
-                                ? (
-                                    proyecto()!.fechaFin | date:'dd/MM/yyyy'
-                                )
-                                : 'Sin fecha'
-                            }}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400 mb-1">
-                            Días restantes
-                        </p>
-                        <p class="font-medium text-gray-700">
-                            {{
-                            proyecto()!.diasRestantes  ?? '-'
-                            }}
-                        </p>
-                    </div>
+      <app-section-card title="Información">
+        <p>Fecha fin: {{ proyecto()!.fechaFin | date:'dd/MM/yyyy' }}</p>
+        <p>Días restantes: {{ proyecto()!.diasRestantes ?? '-' }}</p>
+      </app-section-card>
+      <div class="lg:col-span-2">
+        <app-section-card title="Tareas del proyecto">
+          <div class="flex justify-end mb-4">
+            <button
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+              (click)="abrirNuevaTarea()"
+            >
+              + Nueva tarea
+            </button>
+          </div>
+          @if (tareas().length === 0) {
+            <p class="text-center text-gray-400 py-10">
+              No hay tareas
+            </p>
+          }
+          @else {
+            <div class="space-y-3">
+              @for (tarea of tareas(); track tarea.id) {
+                <div class="border rounded-xl p-4 flex justify-between items-center">
+                  <span class="font-medium">
+                    {{ tarea.descripcion }}
+                  </span>
+                  <div class="flex gap-2 items-center">
+                    <app-badge [label]="tarea.estado" color="blue" />
+                    <button class="cursor-pointer" (click)="editarTarea(tarea)">
+                      ✏️
+                    </button>
+                    <button class="cursor-pointer" (click)="eliminarTarea(tarea)">
+                      🗑️
+                    </button>
+                  </div>
                 </div>
-            </app-section-card>
-        </div>
-
-        <div class="lg:col-span-2">
-            <app-section-card title="Tareas del proyecto">
-                @if ( proyecto()!.tareas?.length === 0) {
-                    <div class="text-center py-10 text-gray-400">
-                    No hay tareas
-                    </div>
-                }
-                @else {
-                    <div class="space-y-3">
-                    @for ( tarea of proyecto()!.tareas; track tarea.id) {
-                        <div class=" border border-gray-100 rounded-2xl p-4 hover:bg-gray-50 transition-all">
-                            <div class=" flex items-center justify-between">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">
-                                        {{ tarea.descripcion }}
-                                    </h4>
-                                </div>
-                                <app-badge [label]="tarea.estado" color="blue" />
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            </app-section-card>
-        </div>
+              }
+            </div>
+          }
+        </app-section-card>
+      </div>
     </div>
   }
 </div>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '30rem' }"></p-confirmDialog>
+
+<p-dialog
+  [(visible)]="tareaDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [header]="editandoTarea() ? 'Editar tarea' : 'Nueva tarea'"
+  [draggable]="false"
+>
+  <form [formGroup]="form" class="flex flex-col gap-3">
+    <label>Descripción</label>
+    <input type="text" class="border p-2 rounded" formControlName="descripcion" />
+    <label>Estado</label>
+    <select class="border p-2 rounded cursor-pointer" formControlName="estado">
+      <option value="pendiente">Pendiente</option>
+      <option value="en_progreso">En progreso</option>
+      <option value="finalizado">Finalizado</option>
+      <option value="baja">Baja</option>
+    </select>
+    <div class="flex justify-end gap-2 mt-4">
+      <button
+        type="button"
+        class="px-3 py-2 text-white cursor-pointer bg-red-500"
+        (click)="tareaDialog.set(false)"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
+        (click)="guardarTarea()"
+      >
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>

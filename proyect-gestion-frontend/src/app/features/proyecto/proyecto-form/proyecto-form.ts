@@ -18,25 +18,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProyectoForm {
   private fb = inject(FormBuilder);
-
   private proyectosService = inject(ProyectosService);
-
   private clientesService = inject(ClientesService);
-
   private router = inject(Router);
-
   private route = inject(ActivatedRoute);
-
   private messageService = inject(MessageService);
-
   loading = signal(false);
-
   saving = signal(false);
-
   clientes = signal<Cliente[]>([]);
-
   editando = signal(false);
-
   proyectoId = signal<number | null>(null);
 
   form = this.fb.group({

@@ -1,6 +1,8 @@
+export type TipoContacto = 'EMAIL' | 'TELEFONO';
+
 export interface ContactoCliente {
   id: number;
-  tipo: string;
+  tipo: TipoContacto;
   valor: string;
   etiqueta?: string;
 }
