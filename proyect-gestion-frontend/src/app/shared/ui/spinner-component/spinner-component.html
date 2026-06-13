@@ -1,0 +1,10 @@
+ <div class="flex flex-col items-center justify-center gap-3" [class]="containerClass()">
+    <div
+    class="rounded-full border-gray-200 border-t-blue-500 animate-spin"
+    [class]="sizeClass()"
+    style="border-style: solid;"
+    ></div>
+    @if (label()) {
+        <p class="text-gray-400 text-sm">{{ label() }}</p>
+    }
+</div>

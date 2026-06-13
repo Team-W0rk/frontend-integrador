@@ -1,0 +1,34 @@
+<div
+  class="bg-white rounded-xl p-5 shadow-sm border-l-4 hover:shadow-md transition-shadow"
+  [class]="borderColor"
+>
+  <div class="text-3xl mb-2">
+    {{ icon() }}
+  </div>
+  <div class="text-3xl font-bold text-gray-800">
+    {{ value() }}
+  </div>
+  <div class="text-sm text-gray-500 mb-3">
+    {{ title() }}
+  </div>
+  @if (badges().length > 0) {
+    <div class="flex gap-2 flex-wrap mb-3">
+      @for (badge of badges(); track badge.label) {
+        <span
+          class="px-2 py-1 text-xs font-semibold rounded-full"
+          [class]="getBadgeClass(badge.color)"
+        >
+          {{ badge.label }}
+        </span>
+      }
+    </div>
+  }
+  @if (link()) {
+    <a
+      [routerLink]="link()!"
+      class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors no-underline"
+    >
+      {{ linkLabel() }}
+    </a>
+  }
+</div>

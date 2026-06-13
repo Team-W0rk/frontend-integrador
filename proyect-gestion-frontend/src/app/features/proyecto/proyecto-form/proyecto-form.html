@@ -1,0 +1,103 @@
+<div class="padding mx-auto">
+  <app-page-header
+    [title]="
+      editando()
+        ? 'Editar proyecto'
+        : 'Nuevo proyecto'
+    "
+    subtitle="Complete la información del proyecto"
+  />
+
+  <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+    @if (loading()) {
+      <div class="py-16 text-center text-gray-400">
+        Cargando...
+      </div>
+    } @else {
+      <form
+        [formGroup]="form"
+        (ngSubmit)="guardar()"
+        class="flex flex-col gap-6"
+      >
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold text-gray-700">
+            Nombre del proyecto *
+          </label>
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Ej: Sistema de inventario"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
+          />
+
+          @if (
+            form.controls.nombre.touched &&
+            form.controls.nombre.invalid
+          ) {
+            <span class="text-sm text-red-600">
+              El nombre es obligatorio
+            </span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold text-gray-700">
+            Cliente
+          </label>
+          <select
+            formControlName="clienteId"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
+          >
+            <option [ngValue]="null">
+              Proyecto interno
+            </option>
+
+            @for (cliente of clientes(); track cliente.id) {
+              <option [ngValue]="cliente.id">
+                {{ cliente.nombre }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold text-gray-700">
+            Fecha fin
+          </label>
+          <input
+            type="date"
+            formControlName="fechaFin"
+            class="h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-900"
+          />
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4">
+          <button
+            type="button"
+            (click)="cancelar()"
+            class="h-11 px-5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="saving()"
+            class="h-11 px-5 rounded-xl bg-(--color-primary) text-white hover:bg-(--color-primary-dark) transition-all cursor-pointer disabled:opacity-50"
+          >
+            @if (saving()) {
+              Guardando...
+            } @else {
+              {{
+                editando()
+                  ? 'Guardar cambios'
+                  : 'Crear proyecto'
+              }}
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
+
+<p-toast position="top-right" />

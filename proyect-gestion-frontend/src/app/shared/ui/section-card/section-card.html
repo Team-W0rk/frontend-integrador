@@ -1,0 +1,19 @@
+<div class="bg-white rounded-xl p-5 shadow-sm">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="font-semibold text-gray-800 flex items-center gap-2">
+      @if (icon()) {
+        <span>{{ icon() }}</span>
+      }
+      <span>{{ title() }}</span>
+    </h2>
+    @if (link()) {
+      <a
+        [routerLink]="link()!"
+        class="text-xs text-blue-500 hover:underline"
+      >
+        {{ linkLabel() }}
+      </a>
+    }
+  </div>
+  <ng-content />
+</div>

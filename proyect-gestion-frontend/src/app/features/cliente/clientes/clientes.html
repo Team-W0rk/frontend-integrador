@@ -1,0 +1,27 @@
+<div class="padding mx-auto">
+  <app-page-header
+    title="Clientes"
+    subtitle="Gestión completa de clientes"
+    [showSearch]="true"
+    searchPlaceholder="Buscar cliente..."
+    [createRoute]="'/clientes/nuevo'"
+    createLabel="Nuevo cliente"
+    [exportExcel]="true"
+    [exportPdf]="true"
+    (search)="search.set($event)"
+    (exportExcelClick)="exportarExcel()"
+    (exportPdfClick)="exportarPdf()"
+  />
+
+  <app-data-table
+    [columns]="columns"
+    [data]="clientesFiltrados()"
+    [loading]="loading()"
+    (detail)="verDetalle($event.id)"
+    (edit)="editar($event.id)"
+    (remove)="eliminar($event)"
+  />
+</div>
+
+<p-toast />
+<p-confirmDialog />

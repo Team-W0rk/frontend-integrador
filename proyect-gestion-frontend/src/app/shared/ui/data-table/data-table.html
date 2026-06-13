@@ -1,0 +1,90 @@
+<div class="bg-white rounded-2xl border border-gray-100 overflow-hidden table-space">
+  @if (loading()) {
+    <div class="p-10 text-center text-gray-400">
+      Cargando...
+    </div>
+  }
+  @else if (data().length === 0) {
+    <div class="p-10 text-center text-gray-400">
+      No hay datos disponibles
+    </div>
+  }
+  @else {
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-(--color-primary)">
+          <tr>
+            @for (col of columns(); track col.field) {
+              <th
+                class="padding text-left text-base font-semibold uppercase text-(--primary-100)"
+              >
+                {{ col.header }}
+              </th>
+            }
+            <th class="px-4 py-3 w-40 text-right">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of data(); track row.id) {
+            <tr
+              class="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+            >
+              @for (col of columns(); track col.field) {
+                <td class="px-4 py-4 text-sm text-gray-700">
+                  @if (!col.type || col.type === 'text') {
+                    {{ getValue(row, col.field) || '-' }}
+                  }
+                  @if (col.type === 'date') {
+                    {{
+                      getValue(row, col.field)
+                        ? (
+                            getValue(row, col.field)
+                            | date:'dd/MM/yyyy'
+                          )
+                        : '-'
+                    }}
+                  }
+                  @if (col.type === 'badge') {
+                    <app-badge
+                      [label]="getValue(row, col.field)"
+                      [color]="
+                        getBadgeColor(
+                          getValue(row, col.field)
+                        )
+                      "
+                      paddingClass="badge-padding-lg"
+                    />
+                  }
+                </td>
+              }
+              <td class="px-4 py-4">
+                <div class="flex items-center justify-end gap-2">
+                  <button
+                    (click)="detail.emit(row)"
+                    class="w-9 h-9 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all cursor-pointer"
+                  >
+                    👁️
+                  </button>
+                  <button
+                    (click)="edit.emit(row)"
+                    class="w-9 h-9 rounded-lg border border-blue-200 hover:bg-blue-50 transition-all cursor-pointer"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    (click)="remove.emit(row)"
+                    class="w-9 h-9 rounded-lg border border-red-200 hover:bg-red-50 transition-all cursor-pointer"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
