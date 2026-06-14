@@ -8,7 +8,7 @@
     createLabel="Nuevo proyecto"
     [exportExcel]="true"
     [exportPdf]="true"
-    (search)="search.set($event)"
+    (filters)="onFilters($event)"
     (exportExcelClick)="exportarExcel()"
     (exportPdfClick)="exportarPdf()"
   />

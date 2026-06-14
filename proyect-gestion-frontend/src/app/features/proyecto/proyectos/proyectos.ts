@@ -31,7 +31,13 @@ export class Proyectos implements OnInit {
 
   loading = signal(true);
 
-  search = signal('');
+  filtros = signal<{
+    search: string;
+    estado?: string;
+  }>({
+    search: '',
+    estado: undefined
+  });
 
   columns = [
     {
@@ -55,16 +61,20 @@ export class Proyectos implements OnInit {
   ];
 
   proyectosFiltrados = computed(() => {
-    const texto = this.search()
-      .trim()
-      .toLowerCase();
-    if (!texto) {
-      return this.proyectos();
-    }
-    return this.proyectos().filter((p) =>
-      p.nombre.toLowerCase().includes(texto)
-    );
+    const { search, estado } = this.filtros();
+
+    return this.proyectos().filter(p => {
+      const matchNombre = p.nombre
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchEstado = estado
+        ? p.estado === estado
+        : true;
+      return matchNombre && matchEstado;
+    });
   });
+
+
 
   ngOnInit(): void {
     this.cargarProyectos();
@@ -84,10 +94,13 @@ export class Proyectos implements OnInit {
       });
   }
 
-  onSearch(value: string): void {
-    this.search.set(value);
+  onFilters(event: { search: string; estado?: string }) {
+    this.filtros.set({
+      search: event.search,
+      estado: event.estado
+    });
   }
-
+  
   editar(id: number): void {
     this.router.navigate([
       '/proyectos/editar',

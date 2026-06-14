@@ -16,18 +16,24 @@
           <tr>
             @for (col of columns(); track col.field) {
               <th
-                class="padding text-left text-base font-semibold uppercase text-(--primary-100)"
+                class="padding text-left text-base font-semibold uppercase text-white cursor-pointer select-none"
+                (click)="toggleSort(col.field)"
               >
-                {{ col.header }}
+                <div class="flex items-center gap-1">
+                  {{ col.header }}
+                  <span class="text-xs">
+                    {{ getSortIcon(col.field) }}
+                  </span>
+                </div>
               </th>
             }
-            <th class="px-4 py-3 w-40 text-right">
+            <th class="px-4 py-3 w-40 text-right text-white">
               Acciones
             </th>
           </tr>
         </thead>
         <tbody>
-          @for (row of data(); track row.id) {
+          @for (row of processedData(); track row.id) {
             <tr
               class="border-b border-gray-50 hover:bg-gray-50 transition-colors"
             >
@@ -88,3 +94,11 @@
     </div>
   }
 </div>
+
+<p-paginator
+  [first]="first()"
+  [rows]="rows()"
+  [totalRecords]="data().length"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  (onPageChange)="onPageChange($event)"
+></p-paginator>

@@ -8,7 +8,7 @@
     createLabel="Nuevo cliente"
     [exportExcel]="true"
     [exportPdf]="true"
-    (search)="search.set($event)"
+    (filters)="filtros.set($event)"
     (exportExcelClick)="exportarExcel()"
     (exportPdfClick)="exportarPdf()"
   />
