@@ -9,4 +9,7 @@ export enum EstadoTarea {
   BAJA       = 'baja',
 }
 export type EstadoMeta = 'pendiente' | 'completada' | 'baja';
-export type TipoContacto = 'email' | 'telefono';
+export enum TipoContacto {
+  TELEFONO = 'telefono',
+  EMAIL = 'email',
+}

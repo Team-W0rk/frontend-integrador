@@ -19,20 +19,20 @@ import { DataTable } from "@/app/shared/ui/data-table/data-table";
   styleUrl: './clientes.css',
 })
 export class Clientes implements OnInit {
-
   private clientesService = inject(ClientesService);
-
   private router = inject(Router);
-
   private confirmationService = inject(ConfirmationService);
-
   private messageService = inject(MessageService);
 
   clientes = signal<Cliente[]>([]);
-
   loading = signal(true);
-
-  search = signal('');
+  filtros = signal<{
+    search: string;
+    estado?: string;
+  }>({
+    search: '',
+    estado: undefined
+  });
 
   columns = [
     {
@@ -54,18 +54,20 @@ export class Clientes implements OnInit {
     },
   ];
 
+  onFilters(event: { search: string; estado?: string }) {
+    this.filtros.set({
+      search: event.search,
+      estado: event.estado
+    });
+  }
+
   clientesFiltrados = computed(() => {
-    const texto = this.search()
-      .trim()
-      .toLowerCase();
-
-    if (!texto) {
-      return this.clientes();
-    }
-
-    return this.clientes().filter((c) =>
-      c.nombre.toLowerCase().includes(texto)
-    );
+    const { search, estado } = this.filtros();
+    return this.clientes().filter(c => {
+      const matchNombre = c.nombre.toLowerCase().includes(search.toLowerCase());
+      const matchEstado = estado ? c.estado === estado : true;
+      return matchNombre && matchEstado;
+    });
   });
 
   ngOnInit(): void {

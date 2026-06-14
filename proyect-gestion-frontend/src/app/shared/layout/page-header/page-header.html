@@ -8,7 +8,6 @@
         </div>
     }
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <!-- ttulo -->
         <div>
             <h1 class="text-2xl font-bold text-gray-800">
                 {{ title() }}
@@ -19,7 +18,6 @@
                 </p>
             }
         </div>
-        <!-- acciones -->
         <div class="flex items-center gap-2 flex-wrap">
             @if (exportPdf()) {
                 <button
@@ -47,16 +45,25 @@
             }
         </div>
     </div>
-    <!-- buscador -->
     @if (showSearch()) {
-        <div class="flex items-center">
+        <div class="flex items-center gap-3">
             <input
-              #searchInput
-              type="text"
-              [placeholder]="searchPlaceholder()"
-              (input)="search.emit(searchInput.value)"
-              class="w-full md:w-80 px-4 py-2 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            #searchInput
+            type="text"
+            [placeholder]="searchPlaceholder()"
+            (input)="onSearchChange(searchInput.value, estadoSelect.value)"
+            class="w-full md:w-80 px-4 py-2 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
             />
+            <select
+            #estadoSelect
+            (change)="onSearchChange(searchInput.value, estadoSelect.value)"
+            class="px-4 py-2 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 cursor-pointer"
+            >
+            <option class="cursor-pointer" value="">Todos los estados</option>
+            <option class="cursor-pointer" value="activo">Activo</option>
+            <option class="cursor-pointer" value="finalizado">Finalizado</option>
+            <option class="cursor-pointer" value="baja">Baja</option>
+            </select>
         </div>
     }
 </div>

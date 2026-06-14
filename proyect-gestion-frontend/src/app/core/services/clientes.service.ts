@@ -9,9 +9,7 @@ import { Cliente } from '../models/clientes.model';
   providedIn: 'root',
 })
 export class ClientesService {
-
   private http = inject(HttpClient);
-
   private api = `${environment.apiUrl}/clientes`;
 
   getAll(): Observable<Cliente[]> {
@@ -47,5 +45,4 @@ export class ClientesService {
       {},
     );
   }
-
 }

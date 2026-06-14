@@ -6,7 +6,7 @@
     searchPlaceholder="Buscar usuario..."
     [createRoute]="'/usuarios/nuevo'"
     createLabel="Nuevo usuario"
-    (search)="search.set($event)"
+    (filters)="onFilters($event)"
   />
   <app-data-table
     [columns]="columns"

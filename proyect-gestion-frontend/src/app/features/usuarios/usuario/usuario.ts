@@ -17,20 +17,21 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './usuario.css',
 })
 export class UsuarioDashboard implements OnInit {
-
   private usuariosService = inject(UsuariosService);
-
   private router = inject(Router);
-
   private confirmationService = inject(ConfirmationService);
-
   private messageService = inject(MessageService);
-
   usuarios = signal<Usuario[]>([]);
-
   loading = signal(true);
-
-  search = signal('');
+  filtros = signal<{
+    search: string;
+    estado?: string;
+    rol?: string;
+    }>({
+    search: '',
+    estado: undefined,
+    rol: undefined
+  });
 
   columns = [
     {
@@ -55,18 +56,28 @@ export class UsuarioDashboard implements OnInit {
   ];
 
   usuariosFiltrados = computed(() => {
-    const texto = this.search()
-      .trim()
-      .toLowerCase();
-    if (!texto) {
-      return this.usuarios();
-    }
-    return this.usuarios().filter((u) =>
-      u.username
+    const { search, estado, rol } = this.filtros();
+    return this.usuarios().filter(u => {
+      const matchNombre = u.username
         .toLowerCase()
-        .includes(texto)
-    );
+        .includes(search.toLowerCase());
+      const matchEstado = estado
+        ? u.estado === estado
+        : true;
+      const matchRol = rol
+        ? u.rol === rol
+        : true;
+      return matchNombre && matchEstado && matchRol;
+    });
   });
+
+  onFilters(event: { search: string; estado?: string; rol?: string }) {
+    this.filtros.set({
+      search: event.search,
+      estado: event.estado,
+      rol: event.rol
+    });
+  }
 
   ngOnInit(): void {
     this.cargarUsuarios();

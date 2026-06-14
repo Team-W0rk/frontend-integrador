@@ -9,11 +9,9 @@ import { RouterLink } from '@angular/router';
 })
 export class PageHeader {
   title = input.required<string>();
-
   subtitle = input<string>('');
 
   backRoute = input<string | null>(null);
-
   backLabel = input('Volver');
 
   showSearch = input(false);
@@ -22,16 +20,24 @@ export class PageHeader {
 
   search = output<string>();
 
-  createRoute = input<string | null>(null);
+  filters = output<{
+    search: string;
+    estado?: string;
+  }>();
 
+  createRoute = input<string | null>(null);
   createLabel = input('Agregar');
 
   exportPdf = input(false);
-
   exportExcel = input(false);
 
   exportPdfClick = output<void>();
-
   exportExcelClick = output<void>();
 
+  onSearchChange(value: string, estado: string) {
+    this.filters.emit({
+      search: value,
+      estado: estado || undefined
+    });
+  }
 }
