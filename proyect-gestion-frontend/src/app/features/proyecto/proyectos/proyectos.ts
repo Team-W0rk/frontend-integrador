@@ -3,7 +3,7 @@ import { ProyectosService } from '@/app/core/services/proyectos.service';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { ConfirmationService, MessageService} from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { PageHeader } from "@/app/shared/layout/page-header/page-header";
 import { DataTable } from "@/app/shared/ui/data-table/data-table";
@@ -20,15 +20,11 @@ import { exportToCsv } from '@/app/shared/utils/export.util';
 })
 export class Proyectos implements OnInit {
   private proyectosService = inject(ProyectosService);
-
   private router = inject(Router);
-
   private confirmationService = inject(ConfirmationService);
-
   private messageService = inject(MessageService);
 
   proyectos = signal<Proyecto[]>([]);
-
   loading = signal(true);
 
   filtros = signal<{
@@ -38,6 +34,8 @@ export class Proyectos implements OnInit {
     search: '',
     estado: undefined
   });
+
+  esAdmin = false;
 
   columns = [
     {
@@ -77,21 +75,22 @@ export class Proyectos implements OnInit {
 
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('usuario') || '{}');
+    this.esAdmin = user?.rol === 'ADMIN';
     this.cargarProyectos();
   }
 
   cargarProyectos(): void {
     this.loading.set(true);
-    this.proyectosService.getAll()
-      .subscribe({
-        next: (res) => {
-          this.proyectos.set(res.datos);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.loading.set(false);
-        },
-      });
+    this.proyectosService.getAll().subscribe({
+      next: (res) => {
+        this.proyectos.set(res.datos);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
+    });
   }
 
   onFilters(event: { search: string; estado?: string }) {
@@ -102,10 +101,7 @@ export class Proyectos implements OnInit {
   }
   
   editar(id: number): void {
-    this.router.navigate([
-      '/proyectos/editar',
-      id,
-    ]);
+    this.router.navigate(['/proyectos/editar', id]);
   }
 
   eliminar(proyecto: Proyecto): void {
@@ -117,100 +113,59 @@ export class Proyectos implements OnInit {
       rejectLabel: 'Cancelar',
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-text',
-      
-        accept: () => {
-        this.proyectosService
-          .delete(proyecto.id)
-          .subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Proyecto eliminado',
-                detail:
-                  'El proyecto fue dado de baja',
-              });
-              this.cargarProyectos()
-            },
-
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail:
-                  err?.error?.message ||
-                  'No se pudo eliminar el proyecto',
-              });
-            },
-          });
+      accept: () => {
+        this.proyectosService.delete(proyecto.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Proyecto eliminado',
+              detail: 'El proyecto fue dado de baja',
+            });
+            this.cargarProyectos();
+          },
+          error: (err) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err?.error?.message || 'No se pudo eliminar el proyecto',
+            });
+          },
+        });
       },
     });
   }
 
   verDetalle(id: number): void {
-    this.router.navigate([
-      '/proyectos',
-      id,
-    ]);
+    this.router.navigate(['/proyectos', id]);
   }
 
   exportarExcel(): void {
-    const headers = [
-      'Proyecto',
-      'Cliente',
-      'Estado',
-      'Fecha fin',
-    ];
-
+    const headers = ['Proyecto', 'Cliente', 'Estado', 'Fecha fin'];
     const rows = this.proyectosFiltrados().map((p) => [
       p.nombre,
       p.cliente?.nombre || 'Interno',
       p.estado,
-      p.fechaFin
-        ? new Date(p.fechaFin)
-            .toLocaleDateString('es-AR')
-        : '-',
+      p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-AR') : '-',
     ]);
-
-    exportToCsv(
-      'proyectos',
-      headers,
-      rows,
-    );
+    exportToCsv('proyectos', headers, rows);
   }
 
   exportarPdf(): void {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text(
-      'Listado de proyectos',
-      14,
-      20,
-    );
+    doc.text('Listado de proyectos', 14, 20);
     autoTable(doc, {
       startY: 30,
-      head: [[
-        'Proyecto',
-        'Cliente',
-        'Estado',
-        'Fecha fin',
-      ]],
+      head: [['Proyecto', 'Cliente', 'Estado', 'Fecha fin']],
       body: this.proyectosFiltrados().map((p) => [
         p.nombre,
         p.cliente?.nombre || '-',
         p.estado,
-        p.fechaFin
-          ? new Date(p.fechaFin)
-              .toLocaleDateString('es-AR')
-          : '-',
+        p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-AR') : '-',
       ]),
       theme: 'grid',
-      headStyles: {
-        fillColor: [59, 130, 246],
-      },
-      styles: {
-        fontSize: 10,
-        cellPadding: 3,
-      },
+      headStyles: { fillColor: [59, 130, 246] },
+      styles: { fontSize: 10, cellPadding: 3 },
     });
     doc.save('proyectos.pdf');
   }
