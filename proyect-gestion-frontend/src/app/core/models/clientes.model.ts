@@ -1,7 +1,7 @@
-export type TipoContacto = 'EMAIL' | 'TELEFONO';
+import { TipoContacto } from "./enums.model";
 
 export interface ContactoCliente {
-  id: number;
+  id?: number;
   tipo: TipoContacto;
   valor: string;
   etiqueta?: string;
